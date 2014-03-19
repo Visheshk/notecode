@@ -6,4 +6,9 @@ public class note {
     press = button;
     time = lag;
   }
+  
+  void play(){
+    //makeSound(press);
+    println(press, time);
+  }
 }
