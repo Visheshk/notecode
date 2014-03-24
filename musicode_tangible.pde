@@ -29,19 +29,19 @@ void initEdges(){
 
 void draw() {
 
-  //check for key event
-
-  //on function button press, start recording
-
-  //recording function calls addNote(note-integer, millis()). note-integer is 11 if function 2, 10 if function 1
-  //if note-integer refers to same function, stop recording
-
-  //on play button press, load function 1 to playStack
-
-  //enter playstack
-  //if playStack element is a function
-  //stack that mofo
-  //else play playStack element.
+  //when buttons are pressed
+  //call playButton, edgeButton, noteButton, 
+  //and functionButton on appropriate presses   
+  
+  //in appropriate playButton press, startPlay is called.
+  //here the time cycle starts
+  
+  //startPlay stacks function 1, and starts running down.
+  //it calls playnote, to execute topmost note of playstack.
+  
+  //playnote checks if it's a function call, edge call, note call, or condition
+  //and does the corresponding action.
+  
 }
 
 //playing functions
@@ -215,6 +215,7 @@ void startPlaying() {
   playNotes();
 }*/
 
+/*
 void keyPressed() {
   int keyIndex = -1;
   if (playing == 0) {
@@ -258,4 +259,8 @@ void keyPressed() {
     }
   }
 }
+*/
 
+void keyPressed(){
+  
+}
