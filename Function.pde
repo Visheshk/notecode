@@ -1,11 +1,15 @@
 public class Function{
   //int number;
-  ArrayList<note> recorder
+  ArrayList<note> recorder;
   int playIndex;
   int startTime;
 
   Function() {
     recorder = new ArrayList<note>();
+  }
+
+  void startRecord(){
+    recorder.clear();
   }
 
   void addNote(note enteringNote) {
