@@ -4,6 +4,7 @@ int recorder;
 int playing;
 int lastTime;
 int lastTime2;
+int edgeChecking;
 int[] edges;
 int[] edgeConditions;
 int playIndex;
@@ -16,6 +17,7 @@ void setup() {
   playing = -1;
   lastTime = 0;
   lastTime2 = 0;
+  edgeChecking = 0;
   edges = new int[4];
   initEdges();
   edgeConditions[0] = 0; edgeConditions[1] = 0;
@@ -49,14 +51,14 @@ void draw() {
   
   //playnote checks if it's a function call, edge call, note call, or condition
   //and does the corresponding action.
-  
+  /*
   if(playing != -1){
     lastTime2 = millis();
     checkEdgeInputs();
   }
-  
+  */
 }
-
+/*
 void checkEdgeInput(){
   int now;
   int edgeTruth = 0;
@@ -66,7 +68,7 @@ void checkEdgeInput(){
     now = millis()
   }
   initEdges();
-}
+}*/
 
 //playing functions
 void endTime(){
@@ -96,19 +98,21 @@ void checkCondition(int number){
   now = millis();
   int edgeTruth;
   edgeTruth = 0;
-  while (now - lastTime < 500 || edgeTruth == 1){
+  while (now - lastTime < 500 || edgeTruth == 0){
+    edgeChecking = 1;
     if(edges[number] == 1){
       edgeTruth = 1;
     }
   }
   
-  if (edgeTruth == 0){
+  if (edgeTruth == 1){
     //remove all following conditions if edgetruth is 0
     //and then remove the next note
     if(playIndex > 0)
       playStack.remove(playIndex - 1);
   }
   initEdges();
+  edgeChecking = 0;
 }
 
 void playNote(int playIndex){
@@ -143,10 +147,10 @@ void startPlay(){
   playing = -1;
 }
 
-void edgeIn(int number){
+/*void edgeIn(int number){
   //if it received a signal from an edge
   edges[number] = 1;
-}
+}*/
 
 
 
@@ -201,9 +205,9 @@ void edgeButtonPress(int number, int type){
     println("Edge button ", number, type);
     addToRecorder(number, type + 2);
   }
-  //else if(recorder == -1){
-    
-  //}
+  else if(edgeChecking == 1 && type == 1){
+    edgeIn(number);
+  }
   
   //***add edge input conditions when recorder is off
   
