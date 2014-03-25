@@ -13,6 +13,6 @@ public class note {
   
   void play(){
     //makeSound(press);
-    println(press, time);
+    println(number, kind);
   }
 }

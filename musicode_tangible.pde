@@ -3,17 +3,25 @@ Function[] butts; //the storage of all the buttonses's records
 int recorder;
 int playing;
 int lastTime;
+int lastTime2;
 int[] edges;
+int[] edgeConditions;
 int playIndex;
+int delayTime;
 
 void setup() {
   size(640, 360);
   noStroke();
   recorder = -1;
   playing = -1;
+  lastTime = 0;
+  lastTime2 = 0;
   edges = new int[4];
   initEdges();
+  edgeConditions[0] = 0; edgeConditions[1] = 0;
+  edgeConditions[2] = 0; edgeConditions[3] = 0;
   playIndex = 0;
+  delayTime = 500;
   butts = new Function[2];
   butts[0] = new Function();
   butts[1] = new Function();
@@ -42,14 +50,29 @@ void draw() {
   //playnote checks if it's a function call, edge call, note call, or condition
   //and does the corresponding action.
   
+  if(playing != -1){
+    lastTime2 = millis();
+    checkEdgeInputs();
+  }
+  
+}
+
+void checkEdgeInput(){
+  int now;
+  int edgeTruth = 0;
+  now = millis();
+  while(now - lastTime < delayTime || edgeTruth == 0){
+    
+    now = millis()
+  }
+  initEdges();
 }
 
 //playing functions
-
 void endTime(){
   int now;
   now = millis();
-  while (now - lastTime < 500){
+  while (now - lastTime < delayTime){
     now = millis();
   } 
 }
@@ -117,6 +140,7 @@ void startPlay(){
     playIndex--;
     lastTime = millis();
   }
+  playing = -1;
 }
 
 void edgeIn(int number){
@@ -142,18 +166,25 @@ void addToRecorder(int button, int type){
 //all the calls when different buttons are pressed 
 
 void functionButtonPress(int functionNumber) {
-  if (playing != -1) {
-    if (recorder != -1) {
+  println("Function button");
+  if (playing == -1) {
+    println("Not playing abhi");
+    if (recorder == -1) {
+      println("Function ", functionNumber, " starts recording");
       startRecording(functionNumber);
+      recorder = functionNumber;
     }
     else {
+      println("function ", functionNumber, " recorded");
       addToRecorder(functionNumber, 1);
     }
   }
 }
 
 void noteButtonPress(int note){
+  println("Note button");
   if(recorder != -1){
+    println("Recording note ", note);
     addToRecorder(note, 0);
   }
   else{
@@ -165,17 +196,24 @@ void noteButtonPress(int note){
 void edgeButtonPress(int number, int type){ 
   //type = 0 is for out i.e. call, 
   //1 is for in i.e. if receiving/condition for next step
+  println("Edge button");
   if(recorder != -1){
+    println("Edge button ", number, type);
     addToRecorder(number, type + 2);
   }
+  //else if(recorder == -1){
+    
+  //}
   
   //***add edge input conditions when recorder is off
   
 }
 
 void playButtonPress(){
+  println("Play Button Press");
   if (playing == 1){
     //playing = 0; - pause attempts pending
+    println("Stopping play");
     playing = -1;
   }
   /*else if (playing == 0){
@@ -183,84 +221,43 @@ void playButtonPress(){
   }*/
   else{
     if(recorder != -1){
+      println("Stopping recording");
       recorder = -1;
     }
     else{
       playing = 1;
+      println("Starting play");
       startPlay();
     }
   }
 }
 //button presses finished
 
-/*void playNotes() {
-  int i = playStack.size() - 1;
-  while (playStack.size () > 0) {
-    i = playStack.size() - 1;
-    note currNote = playStack.get(i);
-    playStack.remove(i);
-    if (currNote.press < 10) {
-      currNote.play();
-    }
-    else {
-      butts[currNote.press - 10].startPlay(playStack);
-    }
-  }
-}
-
-void startPlaying() {
-  if (recorder == -1) {
-    butts[0].startPlay(playStack);
-  }
-  playNotes();
-}*/
-
-/*
-void keyPressed() {
-  int keyIndex = -1;
-  if (playing == 0) {
-    if (key == 'a') {
-      if (recorder == -1) {
-        //start recording function 1
-        recorder = 0;
-        butts[0].record(millis());
-      }
-      else if (recorder == 0) {
-        //stop recording
-        recorder = -1;
-      }
-      else if (recorder == 1) {
-        //add function 1, i.e. 10 to function being recorded
-        butts[recorder].addNote(10, millis());
-      }
-    }
-    else if (key == 'b') {
-      if (recorder == -1) {
-        //start recording function 2
-        recorder = 1;
-        butts[1].record(millis());
-      }
-      else if (recorder == 1) {
-        //stop recording
-        recorder = -1;
-      }
-      else if (recorder == 0) {
-        //add function 1, i.e. 11 to function being recorded
-        butts[recorder].addNote(11, millis());
-      }
-    }
-    else if (key >= 'c' && key <= 'f' && recorder != -1) {
-      keyIndex = key - 'c';
-      butts[recorder].addNote(keyIndex, millis());
-    }
-
-    else if (key == 'p') {
-      startPlaying();
-    }
-  }
-}
-*/
-
 void keyPressed(){
-  
+  int keyIndex = -1;
+  if (key == 'p'){
+    playButtonPress();
+  }
+  else if (playing == -1){
+    if (key >= 'g' && key <= 'h'){
+      keyIndex = key - 'g';
+      println(keyIndex);
+      functionButtonPress(keyIndex);
+    }
+    else if (key >= '1' && key <= '4'){
+      keyIndex = key - '1';
+      println(keyIndex);
+      edgeButtonPress(keyIndex, 0);
+    }
+    else if (key >= '5' && key <= '8'){
+      keyIndex = key - '5';
+      println(keyIndex);
+      edgeButtonPress(keyIndex, 1);
+    }
+    else if (key >= 'a' && key <= 'f'){
+      keyIndex = key - 'a';
+      println(keyIndex);
+      noteButtonPress(keyIndex);
+    }
+  }
 }
